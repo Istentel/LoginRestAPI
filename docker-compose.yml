@@ -29,7 +29,6 @@ services:
     build:
       context: ./db_gateway
     environment:
-      # set database, memcached etc credentials
       DB_HOST: mysql
       DB_NAME: db
       DB_USER: user

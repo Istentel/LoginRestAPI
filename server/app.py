@@ -1,11 +1,4 @@
-# app.py
-from flask import Flask, jsonify
-
-app = Flask(__name__)
-
-@app.route('/api/hello', methods=['GET'])
-def get_hello():
-    return jsonify({'message': 'Hello from the server!'})
+from web import app
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
