@@ -10,7 +10,8 @@ def get_hello():
 @app.route('/')
 @app.route('/home')
 def home_page():
-    if not 'username' in session:
+    if session["username"] == None:
+    #if not 'username' in session:
         return redirect(url_for("login_page"))
     return render_template('home.html')
 
@@ -57,6 +58,7 @@ def logout_page():
     session["username"] = None
     return redirect("/")
 
+# This route is use for testing purposes
 @app.route('/api/test', methods=['GET'])
 def test():
     #response = requests.get('http://db_gateway:5001/api/hello')

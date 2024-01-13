@@ -97,7 +97,7 @@ def login_user():
     if attempted_user and attempted_user.check_password_correction(attempted_password=auth.password):
         return "Successfuly logged", 200
     else:
-        return "invalid credentials", 401
+        return "Invalid credentials", 401
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
