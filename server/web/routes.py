@@ -1,5 +1,5 @@
 from web import app
-from flask import render_template, redirect, url_for, jsonify, flash
+from flask import render_template, redirect, url_for, jsonify, flash, session
 from web.forms import RegisterForm, LoginForm
 from web.db_api import register_user_api, login_user_api
 
@@ -10,6 +10,8 @@ def get_hello():
 @app.route('/')
 @app.route('/home')
 def home_page():
+    if not 'username' in session:
+        return redirect(url_for("login_page"))
     return render_template('home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -22,18 +24,10 @@ def login_page():
 
         if response and response.status_code == 200:
             flash('Success! You logged in!', category='success')
+            session["username"] = form.email.data
             return redirect(url_for('home_page'))
         else:
             flash('Username or password are not correct! Please try again!', category='danger')
-        # attempted_user = User.query.filter_by(email=form.email.data).first()
-
-        # if attempted_user and attempted_user.check_password_correction(attempted_password=form.password.data):
-        #     login_user(attempted_user)
-        #     flash('Success! You logged in!', category='success')
-        #     return redirect(url_for('home_page'))
-        # else:
-        #     flash('Username or password are not correct! Please try again!', category='danger')
-
     return render_template('login.html', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -47,6 +41,7 @@ def register_page():
         
         if response:
             flash(f'Success! User {new_user["username"]} created succesfully!', category='success')
+            session["username"] = form.email.data
             return render_template('home.html')
         else:
             return jsonify({'message': 'No valid response'}) 
@@ -56,6 +51,11 @@ def register_page():
             flash(f'Error when creating an user:{err_msj}', category='danger')
 
     return render_template('register.html', form=form)
+
+@app.route("/logout")
+def logout_page():
+    session["username"] = None
+    return redirect("/")
 
 @app.route('/api/test', methods=['GET'])
 def test():
